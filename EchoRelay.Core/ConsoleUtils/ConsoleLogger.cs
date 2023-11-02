@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,8 +11,15 @@ namespace EchoRelay.Core.ConsoleUtils
     {
         static ConsoleLogger()
         {
-            File.WriteAllText("console.log", "");
-            File.AppendAllText("console.log", "=== Log initialized at " + DateTime.Now.ToString("G") + " ===");
+            var indicator = Encoding.UTF8.GetBytes("=== Log initialized at " + DateTime.Now.ToString("G") + " ===\n");
+
+            // create the file stream for read / wrtie operations
+            FileStream stream = File.Open("console.log", FileMode.OpenOrCreate, FileAccess.ReadWrite);
+            stream.SetLength(0);
+            stream.Write(indicator, 0, indicator.Length);
+
+            stream.Flush(); // cause the file to be reset
+            stream.Close();
         }
 
         public static void LogMessage(LogType logType, string message, params object[] args)
@@ -34,7 +42,7 @@ namespace EchoRelay.Core.ConsoleUtils
                 ConsolePal.WriteLine(consoleMessage);
                 ConsolePal.ResetTextColor();
 
-                File.AppendAllText("console.log", $"[{DateTime.Now:G}]    {logType.ToString().PadRight("Critical    ".Length, ' ')}{consoleMessage}");
+                File.AppendAllText("console.log", $"[{DateTime.Now:G}]    {logType.ToString().PadRight("Critical    ".Length, ' ')}{consoleMessage}\n");
             }
         }
 
