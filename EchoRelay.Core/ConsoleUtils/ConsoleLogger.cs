@@ -8,6 +8,12 @@ namespace EchoRelay.Core.ConsoleUtils
 {
     public static class ConsoleLogger
     {
+        static ConsoleLogger()
+        {
+            File.WriteAllText("console.log", "");
+            File.AppendAllText("console.log", "=== Log initialized at " + DateTime.Now.ToString("G") + " ===");
+        }
+
         public static void LogMessage(LogType logType, string message, params object[] args)
         {
             // Cant log a message when it is lower than s_MinimumLogType!
@@ -22,11 +28,13 @@ namespace EchoRelay.Core.ConsoleUtils
                 ConsolePal.SetTextColor(ConsoleColor.Green);
                 ConsolePal.Write(DateTime.Now.ToString("G"));
                 ConsolePal.ResetTextColor();
-                ConsolePal.Write("] ");
+                ConsolePal.Write("]    ");
                 ConsolePal.SetTextColor(GetConsoleColor(logType));
-                ConsolePal.Write(logType.ToString().PadRight("Critical ".Length, ' '));
+                ConsolePal.Write(logType.ToString().PadRight("Critical    ".Length, ' '));
                 ConsolePal.WriteLine(consoleMessage);
                 ConsolePal.ResetTextColor();
+
+                File.AppendAllText("console.log", $"[{DateTime.Now:G}]    {logType.ToString().PadRight("Critical    ".Length, ' ')}{consoleMessage}");
             }
         }
 

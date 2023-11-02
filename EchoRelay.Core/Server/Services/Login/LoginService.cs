@@ -208,9 +208,6 @@ namespace EchoRelay.Core.Server.Services.Login
                 // Note: It would be an anti-goal of this project to integrate with Oculus services anyways, so this is just a note for research.
             }
 
-            foreach (var accountResource in Storage.Accounts.Values())
-                ConsoleLogger.LogMessage(LogType.Info, "Found account: {0}", accountResource.Profile.Client.DisplayName);
-
             // Authenticate to the account. If this is the first time an authentication lock/password
             // was provided, it will be set for future authentication.
             if (!account.Authenticate(authPassword))

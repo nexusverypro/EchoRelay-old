@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using EchoRelay.Core.ConsoleUtils;
+using System.Collections.Concurrent;
 using System.Reflection;
 
 namespace EchoRelay.Core.Server.Messages
@@ -77,8 +78,11 @@ namespace EchoRelay.Core.Server.Messages
             {
                 if (errorIfUnimplemented)
                 {
+                    ConsoleLogger.LogMessage(LogType.Error, "(MessageTypes) Failed to create message from type symbol. No message type was registered for symbol {0}", typeSymbol);
                     throw new ArgumentException($"Failed to create message from type symbol. No message type was registered for symbol {typeSymbol}");
                 }
+
+                ConsoleLogger.LogMessage(LogType.Error, "(MessageTypes) Failed to create message from type symbol. No message type was registered for symbol {0}", typeSymbol);
                 return new UnimplementedMessage(typeSymbol);
             }
 
@@ -86,6 +90,7 @@ namespace EchoRelay.Core.Server.Messages
             message = (Message?)Activator.CreateInstance(type);
             if (message == null)
             {
+                ConsoleLogger.LogMessage(LogType.Error, "(MessageTypes) Failed to create message from type symbol. {0} could not be instantiated as a {1} type", type.Name, nameof(Message));
                 throw new ArgumentException($"Failed to create message from type symbol. {type.Name} could not be instantiated as a {nameof(Message)} type.");
             }
             return message;
@@ -109,20 +114,23 @@ namespace EchoRelay.Core.Server.Messages
             // If the type is not deriving from our message type, throw an exception.
             if (!IsMessageType(type) || type == typeof(UnimplementedMessage) || type == typeof(Message))
             {
+                ConsoleLogger.LogMessage(LogType.Error, "(MessageTypes) Failed to register message type. {0} is not a valid {1} type to register", type.Name, nameof(Message));
                 throw new ArgumentException($"Failed to register message type. {type.Name} is not a valid {nameof(Message)} type to register.");
             }
-
 
             // Create an instance of the message.
             Message? defaultMessage = (Message?)Activator.CreateInstance(type);
             if (defaultMessage == null)
             {
+                ConsoleLogger.LogMessage(LogType.Error, "(MessageTypes) Failed to register message type. {0} could not be instantiated as a {1} type", type.Name, nameof(Message));
                 throw new ArgumentException($"Failed to register message type. {type.Name} could not be instantiated as a {nameof(Message)} type.");
             }
 
             // Set it in our lookups.
             _typesToSymbols[type] = defaultMessage.MessageTypeSymbol;
             _symbolsToTypes[defaultMessage.MessageTypeSymbol] = type;
+
+            ConsoleLogger.LogMessage(LogType.Info, "Registered message {0} as {1}", defaultMessage.MessageTypeSymbol, type.Name);
         }
 
         /// <summary>
@@ -143,6 +151,7 @@ namespace EchoRelay.Core.Server.Messages
             // If the type is not deriving from our message type, throw an exception.
             if (!IsMessageType(type))
             {
+                ConsoleLogger.LogMessage(LogType.Error, "(MessageTypes) Failed to unregister message type. {0} is not a valid {1} type", type.Name, nameof(Message));
                 throw new ArgumentException($"Failed to unregister message type. {type.Name} is not a valid {nameof(Message)} type.");
             }
 
@@ -150,6 +159,7 @@ namespace EchoRelay.Core.Server.Messages
             Message? defaultMessage = (Message?)Activator.CreateInstance(type);
             if (defaultMessage == null)
             {
+                ConsoleLogger.LogMessage(LogType.Error, "(MessageTypes) Failed to unregister message type. {0} is not a valid {1} type", type.Name, nameof(Message));
                 throw new ArgumentException($"Failed to unregister message type. {type.Name} could not be instantiated as a {nameof(Message)} type.");
             }
 

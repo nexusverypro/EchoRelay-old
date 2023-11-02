@@ -114,10 +114,7 @@ namespace EchoRelay.Core.Server.Storage.Types
         /// Obtains the key which the storage resource is indexed by.
         /// </summary>
         /// <returns>Returns the key which the resource is indexed by.</returns>
-        public XPlatformId Key()
-        {
-            return AccountIdentifier;
-        }
+        public XPlatformId Key() => AccountIdentifier;
 
         /// <summary>
         /// Authenticates the user with the provided account lock.

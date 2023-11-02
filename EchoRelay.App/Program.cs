@@ -15,7 +15,12 @@ namespace EchoRelay
             // Setup core events
             AppDomain.CurrentDomain.UnhandledException += (s, e) =>
             {
-                ConsoleLogger.LogMessage(LogType.Critical, "Unhandled exception: {0}", e.ExceptionObject);
+                ConsoleLogger.LogMessage(LogType.Critical, "UnhandledException: {0}", e.ExceptionObject);
+            };
+
+            AppDomain.CurrentDomain.FirstChanceException += (s, e) =>
+            {
+                ConsoleLogger.LogMessage(LogType.Critical, "FirstChanceException: {0}", e.Exception);
             };
 
             s_ConsolePtr = ConsolePal.CreateConsoleWindow("EchoRelay Console [DEBUG]");
