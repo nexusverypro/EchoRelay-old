@@ -149,7 +149,8 @@ namespace EchoRelay.Core.Server.Services
                     Memory<byte> receiveBufferAtPosition = receiveBuffer;
                     int totalSize = 0;
                     WebSocketMessageType messageType = WebSocketMessageType.Close;
-                    while(true)
+
+                    while (true)
                     {
                         var receiveResult = await webSocket.ReceiveAsync(receiveBufferAtPosition, CancellationToken.None);
                         messageType = receiveResult.MessageType;
@@ -189,6 +190,11 @@ namespace EchoRelay.Core.Server.Services
                             throw new WebSocketException("Received an unexpected websocket message type");
                     }
                 }
+            }
+            catch (WebSocketException ex)
+            {
+                ConsoleLogger.LogMessage(LogType.Error, "(Service:{0}) Received error code: {1}. Discarding connection.", GetType().Name, ex.WebSocketErrorCode);
+                await webSocket.CloseAsync(WebSocketCloseStatus.PolicyViolation, ex.Message, CancellationToken.None);
             }
             finally
             {

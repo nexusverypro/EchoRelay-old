@@ -9,6 +9,8 @@ namespace EchoRelay.Core.ConsoleUtils
 {
     public static class ConsoleLogger
     {
+        public static event Action<LogType, string> OnMessageReceived;
+
         static ConsoleLogger()
         {
             var indicator = Encoding.UTF8.GetBytes("=== Log initialized at " + DateTime.Now.ToString("G") + " ===\n");
@@ -32,16 +34,20 @@ namespace EchoRelay.Core.ConsoleUtils
 
             lock (System.Console.Out)
             {
-                ConsolePal.Write("[");
-                ConsolePal.SetTextColor(ConsoleColor.Green);
-                ConsolePal.Write(DateTime.Now.ToString("G"));
-                ConsolePal.ResetTextColor();
-                ConsolePal.Write("]    ");
-                ConsolePal.SetTextColor(GetConsoleColor(logType));
-                ConsolePal.Write(logType.ToString().PadRight("Critical    ".Length, ' '));
-                ConsolePal.WriteLine(consoleMessage);
-                ConsolePal.ResetTextColor();
+                if (!s_DisableWriteToConsole)
+                {
+                    ConsolePal.Write("[");
+                    ConsolePal.SetTextColor(ConsoleColor.Green);
+                    ConsolePal.Write(DateTime.Now.ToString("G"));
+                    ConsolePal.ResetTextColor();
+                    ConsolePal.Write("]    ");
+                    ConsolePal.SetTextColor(GetConsoleColor(logType));
+                    ConsolePal.Write(logType.ToString().PadRight("Critical    ".Length, ' '));
+                    ConsolePal.WriteLine(consoleMessage);
+                    ConsolePal.ResetTextColor();
+                }
 
+                if (OnMessageReceived != null) OnMessageReceived(logType, consoleMessage);
                 File.AppendAllText("console.log", $"[{DateTime.Now:G}]    {logType.ToString().PadRight("Critical    ".Length, ' ')}{consoleMessage}\n");
             }
         }
@@ -60,6 +66,7 @@ namespace EchoRelay.Core.ConsoleUtils
         }
 
         public static readonly LogType s_MinimumLogType = LogType.Info;
+        public static bool s_DisableWriteToConsole = false;
     }
 
     public enum LogType

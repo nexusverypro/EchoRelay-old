@@ -37,7 +37,7 @@ namespace EchoRelay.Core.Game
             if (headless)
                 args.Add("-headless");
 
-            ConsoleLogger.LogMessage(LogType.Error, "(GameLauncher) Launching Echo Arena as {0}, with {1} argument(s)", role, args.Count);
+            ConsoleLogger.LogMessage(LogType.Info, "(GameLauncher) Launching Echo Arena as {0}, with {1} argument(s)\n\t\tFile Path: {2}\n\t\tArguments: {3}", role, args.Count, executableFilePath, string.Join(" ", args));
 
             // Start the process with our provided arguments.
             Process.Start(executableFilePath, args);

@@ -18,10 +18,10 @@ namespace EchoRelay
                 ConsoleLogger.LogMessage(LogType.Critical, "UnhandledException: {0}", e.ExceptionObject);
             };
 
-            AppDomain.CurrentDomain.FirstChanceException += (s, e) =>
-            {
-                ConsoleLogger.LogMessage(LogType.Critical, "FirstChanceException: {0}", e.Exception);
-            };
+            //AppDomain.CurrentDomain.FirstChanceException += (s, e) =>
+            //{
+            //    ConsoleLogger.LogMessage(LogType.Critical, "FirstChanceException: {0}", e.Exception);
+            //};
 
             s_ConsolePtr = ConsolePal.CreateConsoleWindow("EchoRelay Console [DEBUG]");
             ConsoleLogger.LogMessage(LogType.Info, "Initialized ConsolePal window. IntPtr = {0}", s_ConsolePtr);
