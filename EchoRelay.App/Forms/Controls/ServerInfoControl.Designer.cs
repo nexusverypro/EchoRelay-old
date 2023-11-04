@@ -150,6 +150,7 @@
             rtbGeneratedServiceConfig.Size = new Size(786, 148);
             rtbGeneratedServiceConfig.TabIndex = 9;
             rtbGeneratedServiceConfig.Text = "";
+            rtbGeneratedServiceConfig.TextChanged += rtbGeneratedServiceConfig_TextChanged;
             // 
             // lblServerPort
             // 

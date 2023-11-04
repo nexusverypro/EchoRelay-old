@@ -1,6 +1,7 @@
 ﻿using EchoRelay.App.Settings;
 using EchoRelay.Core.CLI;
 using EchoRelay.Core.ConsoleUtils;
+using System;
 using System.Security.Cryptography;
 using System.Windows.Forms;
 
@@ -10,6 +11,8 @@ namespace EchoRelay.CLI
     {
         private static async Task Main(string[] args)
         {
+            Console.BufferWidth = (int)(Console.BufferWidth * 1.2f);
+            Console.WindowWidth = (int)(Console.WindowWidth * 1.2f);
             var appSettings = AppSettings.Load(Constants.SettingsFile);
 
             if (appSettings == null)

@@ -57,5 +57,10 @@ namespace EchoRelay.App.Forms.Controls
                 File.WriteAllText(saveFileDialog.FileName, rtbGeneratedServiceConfig.Text);
             }
         }
+
+        private void rtbGeneratedServiceConfig_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
