@@ -34,9 +34,7 @@ namespace EchoRelay.CLI.ConsoleCommands.Custom
 
             var timeFrame = GetFromTimeFrameString(args.GetParameter<string>("time"));
             if (args.HasParameter("id"))
-            {
                 resource = Constants.Storage.Accounts.Get(XPlatformId.Parse(args.GetParameter<string>("id"))!);
-            }
             if (args.HasParameter("name"))
             {
                 var displayName = args.GetParameter<string>("name");
