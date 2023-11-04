@@ -48,6 +48,9 @@ namespace EchoRelay.CLI.ConsoleCommands.Custom
                 return;
             }
 
+            resource.BannedUntil = DateTime.UtcNow + timeFrame;
+            Constants.Storage.Accounts.Set(resource);
+
             // mathie can take it from here
             // all you have to do is use Constants.Storage.Accounts
             // to save the account resouce
