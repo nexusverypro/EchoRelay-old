@@ -1,5 +1,6 @@
 ﻿using EchoRelay.Core.ConsoleUtils;
 using EchoRelay.Core.Game;
+using EchoRelay.Core.Server.Services;
 using EchoRelay.Core.Server.Storage.Types;
 using System;
 using System.Collections.Generic;
@@ -50,6 +51,8 @@ namespace EchoRelay.CLI.ConsoleCommands.Custom
 
             resource.BannedUntil = DateTime.UtcNow + timeFrame;
             Constants.Storage.Accounts.Set(resource);
+
+            ConsoleLogger.LogMessage(LogType.Warning, "Banned '{0}' from their session", );
 
             foreach (var rgsKvp in Constants.Server.ServerDBService.Registry.RegisteredGameServers)
             {
