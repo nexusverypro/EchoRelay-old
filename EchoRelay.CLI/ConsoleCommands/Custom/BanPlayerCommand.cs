@@ -52,7 +52,7 @@ namespace EchoRelay.CLI.ConsoleCommands.Custom
             resource.BannedUntil = DateTime.UtcNow + timeFrame;
             Constants.Storage.Accounts.Set(resource);
 
-            ConsoleLogger.LogMessage(LogType.Warning, "Banned '{0}' from their session", );
+            ConsoleLogger.LogMessage(LogType.Warning, "Banned '{0}' from their session", resource.Profile.Server.DisplayName);
 
             foreach (var rgsKvp in Constants.Server.ServerDBService.Registry.RegisteredGameServers)
             {
