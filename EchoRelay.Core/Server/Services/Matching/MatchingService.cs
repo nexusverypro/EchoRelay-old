@@ -25,7 +25,7 @@ namespace EchoRelay.Core.Server.Services.Matching
         /// <param name="packet">The packet sent by the peer.</param>
         protected override async Task HandlePacket(Peer sender, Packet packet)
         {
-            ConsoleLogger.LogMessage(LogType.Warning, "(MatchingService) User {0} sent packet with {1} message(s)", sender.Id, packet.Count);
+            ConsoleLogger.LogMessage(LogType.Debug, "(MatchingService) User {0} sent packet with {1} message(s)", sender.Id, packet.Count);
 
             // Loop for each message received in the packet
             foreach (Message message in packet)
@@ -63,7 +63,7 @@ namespace EchoRelay.Core.Server.Services.Matching
         /// <param name="request">The request contents.</param>
         private async Task ProcessCreateSessionRequestv9(Peer sender, LobbyCreateSessionRequestv9 request)
         {
-            ConsoleLogger.LogMessage(LogType.Warning, "(MatchingService) User {0} requested LobbyCreateSessionRequestv9", sender.Id);
+            ConsoleLogger.LogMessage(LogType.Debug, "(MatchingService) User {0} requested LobbyCreateSessionRequestv9", sender.Id);
 
             // Set the matching data for our user to provide context to matching operations moving forward.
             sender.SetSessionData(MatchingSession.FromCreateSessionCriteria(request.UserId, request.ChannelUUID, request.GameTypeSymbol, request.LevelSymbol, request.LobbyType, (TeamIndex)request.TeamIndex, request.SessionSettings));
@@ -79,7 +79,7 @@ namespace EchoRelay.Core.Server.Services.Matching
         /// <param name="request">The request contents.</param>
         private async Task ProcessFindSessionRequestv11(Peer sender, LobbyFindSessionRequestv11 request)
         {
-            ConsoleLogger.LogMessage(LogType.Warning, "(MatchingService) User {0} requested LobbyFindSessionRequestv11", sender.Id);
+            ConsoleLogger.LogMessage(LogType.Debug, "(MatchingService) User {0} requested LobbyFindSessionRequestv11", sender.Id);
 
             // Set the matching data for our user to provide context to matching operations moving forward.
             sender.SetSessionData(MatchingSession.FromFindSessionCriteria(request.UserId, request.ChannelUUID, request.GameTypeSymbol, (TeamIndex)request.TeamIndex, request.SessionSettings));
@@ -95,7 +95,7 @@ namespace EchoRelay.Core.Server.Services.Matching
         /// <param name="request">The request contents.</param>
         private async Task ProcessJoinSessionRequestv7(Peer sender, LobbyJoinSessionRequestv7 request)
         {
-            ConsoleLogger.LogMessage(LogType.Warning, "(MatchingService) User {0} requested LobbyJoinSessionRequestv7", sender.Id);
+            ConsoleLogger.LogMessage(LogType.Debug, "(MatchingService) User {0} requested LobbyJoinSessionRequestv7", sender.Id);
 
             // Set the matching data for our user to provide context to matching operations moving forward.
             sender.SetSessionData(MatchingSession.FromJoinSpecificSessionCriteria(request.UserId, request.LobbyUUID, (TeamIndex)request.TeamIndex, request.SessionSettings));
@@ -111,7 +111,7 @@ namespace EchoRelay.Core.Server.Services.Matching
         /// <param name="sender">The sender of the request.</param>
         private async Task ProcessMatchingSession(Peer sender, Guid session, XPlatformId userId)
         {
-            ConsoleLogger.LogMessage(LogType.Warning, "(MatchingService) User {0} requested LobbyFindSessionRequestv11/LobbyJoinSessionRequestv7", sender.Id);
+            ConsoleLogger.LogMessage(LogType.Debug, "(MatchingService) User {0} requested LobbyFindSessionRequestv11/LobbyJoinSessionRequestv7", sender.Id);
 
             // Verify the session details provided
             if (!Server.LoginService.CheckUserSessionValid(session, userId))
@@ -234,7 +234,7 @@ namespace EchoRelay.Core.Server.Services.Matching
         /// <param name="request">The request contents.</param>
         private async Task ProcessPendingSessionCancel(Peer sender, LobbyPendingSessionCancel request)
         {
-            ConsoleLogger.LogMessage(LogType.Warning, "(MatchingService) User {0} requested LobbyPendingSessionCancel", sender.Id);
+            ConsoleLogger.LogMessage(LogType.Debug, "(MatchingService) User {0} requested LobbyPendingSessionCancel", sender.Id);
 
             // Clear the matching session data for this peer.
             sender.ClearSessionData();
@@ -248,7 +248,7 @@ namespace EchoRelay.Core.Server.Services.Matching
         /// <param name="request">The request contents.</param>
         private async Task ProcessPingResponse(Peer sender, LobbyPingResponse request)
         {
-            ConsoleLogger.LogMessage(LogType.Warning, "(MatchingService) User {0} requested LobbyPingResponse", sender.Id);
+            ConsoleLogger.LogMessage(LogType.Debug, "(MatchingService) User {0} requested LobbyPingResponse", sender.Id);
 
             // Obtain the user's matching session
             MatchingSession? matchingSession = sender.GetSessionData<MatchingSession>();
@@ -335,7 +335,7 @@ namespace EchoRelay.Core.Server.Services.Matching
         /// <param name="request">The request contents.</param>
         private async Task ProcessPlayerSessionsRequestv5(Peer sender, LobbyPlayerSessionsRequestv5 request)
         {
-            ConsoleLogger.LogMessage(LogType.Warning, "(MatchingService) User {0} requested LobbyPlayerSessionsRequestv5", sender.Id);
+            ConsoleLogger.LogMessage(LogType.Debug, "(MatchingService) User {0} requested LobbyPlayerSessionsRequestv5", sender.Id);
 
             // Verify the session details provided
             if (!Server.LoginService.CheckUserSessionValid(request.Session, request.UserId))

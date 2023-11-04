@@ -104,7 +104,7 @@ namespace EchoRelay.Core.Server.Services.Login
         /// <param name="packet">The packet sent by the peer.</param>
         protected override async Task HandlePacket(Peer sender, Packet packet)
         {
-            ConsoleLogger.LogMessage(LogType.Warning, "(LoginService) User {0} sent packet with {1} message(s)", sender.Id, packet.Count);
+            ConsoleLogger.LogMessage(LogType.Debug, "(LoginService) User {0} sent packet with {1} message(s)", sender.Id, packet.Count);
 
             // Loop for each message received in the packet
             foreach (Message message in packet)
@@ -143,7 +143,7 @@ namespace EchoRelay.Core.Server.Services.Login
         /// <param name="request">The request contents.</param>
         private async Task ProcessLoginRequest(Peer sender, LoginRequest request)
         {
-            ConsoleLogger.LogMessage(LogType.Warning, "(LoginService) User {0} requested LoginRequest", sender.Id);
+            ConsoleLogger.LogMessage(LogType.Debug, "(LoginService) User {0} requested LoginRequest", sender.Id);
 
             // If we have existing session data for this peer's connection, invalidate it.
             // Note: The client may have multiple connections, represented as different peers.
@@ -189,7 +189,7 @@ namespace EchoRelay.Core.Server.Services.Login
             AccountResource? account = Storage.Accounts.Get(request.UserId);
             if (account == null)
             {
-                ConsoleLogger.LogMessage(LogType.Error, "(LoginService) Authentication failed. The account resource is null.");
+                ConsoleLogger.LogMessage(LogType.Error, "(LoginService) The account resource is null. Creating new account for user.");
 
                 // Create a default username for this user.
                 string displayName = request.UserId.PlatformCode == PlatformCode.DMO ? "Anonymous [DEMO]" : $"User [{RandomNumberGenerator.GetInt32(int.MaxValue).ToString("X")}]";
@@ -286,7 +286,7 @@ namespace EchoRelay.Core.Server.Services.Login
         /// <param name="request">The request contents.</param>
         private async Task ProcessLoggedInUserProfileRequest(Peer sender, LoggedInUserProfileRequest request)
         {
-            ConsoleLogger.LogMessage(LogType.Warning, "(LoginService) User {0} requested LoggedInUserProfileRequest", sender.Id);
+            ConsoleLogger.LogMessage(LogType.Debug, "(LoginService) User {0} requested LoggedInUserProfileRequest", sender.Id);
 
             // Verify the session details provided
             if (!CheckUserSessionValid(request.Session, request.UserId))
@@ -314,7 +314,7 @@ namespace EchoRelay.Core.Server.Services.Login
         /// <param name="request">The request contents.</param>
         private async Task ProcessOtherUserProfileRequest(Peer sender, OtherUserProfileRequest request)
         {
-            ConsoleLogger.LogMessage(LogType.Warning, "(LoginService) User {0} requested OtherUserProfileRequest", sender.Id);
+            ConsoleLogger.LogMessage(LogType.Debug, "(LoginService) User {0} requested OtherUserProfileRequest", sender.Id);
 
             // Obtain the account associated with the request.
             AccountResource? account = Storage.Accounts.Get(request.UserId);
@@ -335,7 +335,7 @@ namespace EchoRelay.Core.Server.Services.Login
         /// <param name="request">The request contents.</param>
         private async Task ProcessUserServerProfileUpdateRequest(Peer sender, UserServerProfileUpdateRequest request)
         {
-            ConsoleLogger.LogMessage(LogType.Warning, "(LoginService) User {0} requested UserServerProfileUpdateRequest", sender.Id);
+            ConsoleLogger.LogMessage(LogType.Debug, "(LoginService) User {0} requested UserServerProfileUpdateRequest", sender.Id);
 
             // Obtain the account associated with the request.
             AccountResource? account = Storage.Accounts.Get(request.UserId);
@@ -374,7 +374,7 @@ namespace EchoRelay.Core.Server.Services.Login
         /// <param name="request">The request contents.</param>
         private async Task ProcessUpdateProfile(Peer sender, UpdateProfile request)
         {
-            ConsoleLogger.LogMessage(LogType.Warning, "(LoginService) User {0} requested UpdateProfile", sender.Id);
+            ConsoleLogger.LogMessage(LogType.Debug, "(LoginService) User {0} requested UpdateProfile", sender.Id);
 
             // Verify the session details provided
             if (!CheckUserSessionValid(request.Session, request.UserId))
@@ -421,7 +421,7 @@ namespace EchoRelay.Core.Server.Services.Login
         /// <param name="request">The request contents.</param>
         private async Task ProcessChannelInfoRequest(Peer sender, ChannelInfoRequest request)
         {
-            ConsoleLogger.LogMessage(LogType.Warning, "(LoginService) User {0} requested ChannelInfoRequest", sender.Id);
+            ConsoleLogger.LogMessage(LogType.Debug, "(LoginService) User {0} requested ChannelInfoRequest", sender.Id);
 
             // Try to obtain our channel info
             ChannelInfoResource? channelInfo = Storage.ChannelInfo.Get();
@@ -437,7 +437,7 @@ namespace EchoRelay.Core.Server.Services.Login
         /// <param name="request">The request contents.</param>
         private async Task ProcessDocumentRequestv2(Peer sender, DocumentRequestv2 request)
         {
-            ConsoleLogger.LogMessage(LogType.Warning, "(LoginService) User {0} requested DocumentRequestv2", sender.Id);
+            ConsoleLogger.LogMessage(LogType.Debug, "(LoginService) User {0} requested DocumentRequestv2", sender.Id);
 
             // Obtain the symbols for the document name and language.
             long? nameSymbol = SymbolCache.GetSymbol(request.Name);

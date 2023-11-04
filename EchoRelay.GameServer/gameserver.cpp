@@ -61,6 +61,11 @@ VOID ListenForTcpBroadcasterMessage(GameServerLib* self, EchoVR::SymbolId msgId,
 /// <returns>None</returns>
 VOID SendServerdbTcpMessage(GameServerLib* self, EchoVR::SymbolId msgId, VOID* msg, UINT64 msgSize)
 {
+	if (self->tcpBroadcasterData == nullptr) {
+		Log(EchoVR::LogLevel::Error, "ECHORELAY.GAMESERVER] Cannot send TCP data to a null broadcaster");
+		return;
+	}
+
 	// Wrap the send call provided by the TCP broadcaster.
 	self->tcpBroadcasterData->SendToPeer(self->serverDbPeer, msgId, NULL, 0, msg, msgSize);
 }

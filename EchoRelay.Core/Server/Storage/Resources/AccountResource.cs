@@ -178,6 +178,16 @@ namespace EchoRelay.Core.Server.Storage.Types
         }
         #endregion
 
+        public override string ToString()
+        {
+            return string.Format("AccountResource(Id={0}, DisplayName={1}, LastLogin={2} Banned=({3}, Until={4}))",
+                Profile.Server.XPlatformId,
+                Profile.Server.DisplayName, 
+                new DateTime((long)Profile.Server.LoginTime!).ToString("G"),
+                Banned, 
+                BannedUntil.HasValue ? BannedUntil.Value.ToString("G") : "None");
+        }
+
         /// <summary>
         /// The client and server-side profiles for a given account.
         /// </summary>

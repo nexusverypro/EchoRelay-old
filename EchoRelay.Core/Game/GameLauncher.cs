@@ -8,7 +8,7 @@ namespace EchoRelay.Core.Game
     /// </summary>
     public abstract class GameLauncher
     {
-        public static void Launch(string executableFilePath, LaunchRole role = LaunchRole.Client, bool windowed = false, bool spectatorStream = false, bool moderator = false, bool noOVR = false, bool headless = false, List<string>? additionalArgs = null)
+        public static bool Launch(string executableFilePath, LaunchRole role = LaunchRole.Client, bool windowed = false, bool spectatorStream = false, bool moderator = false, bool noOVR = false, bool headless = false, List<string>? additionalArgs = null)
         {
             // Create a list of arguments
             List<string> args = additionalArgs ?? new List<string>();
@@ -40,7 +40,7 @@ namespace EchoRelay.Core.Game
             ConsoleLogger.LogMessage(LogType.Info, "(GameLauncher) Launching Echo Arena as {0}, with {1} argument(s)\n\t\tFile Path: {2}\n\t\tArguments: {3}", role, args.Count, executableFilePath, string.Join(" ", args));
 
             // Start the process with our provided arguments.
-            Process.Start(executableFilePath, args);
+            return Process.Start(executableFilePath, args) != null;
         }
 
         #region Enums

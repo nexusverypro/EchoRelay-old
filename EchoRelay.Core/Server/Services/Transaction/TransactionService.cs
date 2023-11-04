@@ -21,7 +21,7 @@ namespace EchoRelay.Core.Server.Services.Transaction
         /// <param name="packet">The packet sent by the peer.</param>
         protected override async Task HandlePacket(Peer sender, Packet packet)
         {
-            ConsoleLogger.LogMessage(LogType.Warning, "(TransactionService) User {0} sent packet with {1} message(s)", sender.Id, packet.Count);
+            ConsoleLogger.LogMessage(LogType.Debug, "(TransactionService) User {0} sent packet with {1} message(s)", sender.Id, packet.Count);
 
             // Loop for each message received in the packet
             foreach (Message message in packet)
@@ -44,7 +44,7 @@ namespace EchoRelay.Core.Server.Services.Transaction
         /// <param name="request">The request contents.</param>
         private async Task ProcessReconcileIAPRequest(Peer sender, ReconcileIAP request)
         {
-            ConsoleLogger.LogMessage(LogType.Warning, "(TransactionService) User {0} requested ReconcileIAP", sender.Id);
+            ConsoleLogger.LogMessage(LogType.Debug, "(TransactionService) User {0} requested ReconcileIAP", sender.Id);
 
             // Respond to every request with some kind of result response.
             await sender.Send(new ReconcileIAPResult(request.UserId, JsonConvert.DeserializeObject<JObject>("{'balance': {'currency': {'echopoints': {'val': 0}}}, 'transactionid': 1}")!));

@@ -31,7 +31,7 @@ namespace EchoRelay.Core.Server.Services.Config
         /// <param name="packet">The packet sent by the peer.</param>
         protected override async Task HandlePacket(Peer sender, Packet packet)
         {
-            ConsoleLogger.LogMessage(LogType.Warning, "(ConfigService) User {0} sent packet with {1} message(s)", sender.Id, packet.Count);
+            ConsoleLogger.LogMessage(LogType.Debug, "(ConfigService) User {0} sent packet with {1} message(s)", sender.Id, packet.Count);
 
             // Loop for each message received in the packet
             foreach (Message message in packet)
@@ -54,7 +54,7 @@ namespace EchoRelay.Core.Server.Services.Config
         /// <returns></returns>
         private async Task ProcessConfigRequestv2(Peer sender, ConfigRequestv2 request)
         {
-            ConsoleLogger.LogMessage(LogType.Warning, "(ConfigService) User {0} requested ConfigRequestv2", sender.Id);
+            ConsoleLogger.LogMessage(LogType.Debug, "(ConfigService) User {0} requested ConfigRequestv2", sender.Id);
 
             // Obtain the symbols for this config resource type/identifier.
             long? typeSymbol = SymbolCache.GetSymbol(request.Info.Type);

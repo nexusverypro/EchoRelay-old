@@ -15,7 +15,7 @@ namespace EchoRelay.CLI.ConsoleCommands.Custom
     internal class ServerStartCommand : CommandBase
     {
         public override string Name => "server_start";
-        public override string Description => "Starts all Echo services. [args: ('port' possible 0 - 65535), ('apiKey' any possible)]";
+        public override string Description => "Starts all Echo services. [args: ('port' required possible 0 - 65535), ('apiKey' not required any possible)]";
 
         public override async Task Execute(CommandArguments args)
         {
@@ -32,17 +32,17 @@ namespace EchoRelay.CLI.ConsoleCommands.Custom
             }
 
             // Create our file system storage and open it.
-            ServerStorage serverStorage = new FilesystemServerStorage(Constants.DatabaseFolder);
-            serverStorage.Open();
+            Constants.Storage = new FilesystemServerStorage(Constants.DatabaseFolder);
+            Constants.Storage.Open();
 
-            var apiKey = args.HasParameter("apiKey") ? args.GetParameter<string>("apiKey") : Convert.ToBase64String(RandomNumberGenerator.GetBytes(0x20));
+            var apiKey = args.HasParameter("apiKey") ? args.GetParameter<string>("apiKey") : Constants.AppSettings.ServerDBApiKey;
             // Create a server instance and set up our event handlers
-            Constants.Server = new Server(serverStorage,
+            Constants.Server = new Server(Constants.Storage,
                 new ServerSettings(
                     port: args.GetParameter<ushort>("port"),
                     serverDbApiKey: apiKey,
-                    favorPopulationOverPing: true,
-                    forceIntoAnySessionIfCreationFails: true
+                    favorPopulationOverPing: Constants.AppSettings.MatchingPopulationOverPing,
+                    forceIntoAnySessionIfCreationFails: Constants.AppSettings.MatchingForceIntoAnySessionOnFailure
                     )
                 );
             ConsoleLogger.LogMessage(LogType.Info, "Using DB API key: '{0}'", apiKey);

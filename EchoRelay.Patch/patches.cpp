@@ -133,33 +133,6 @@ VOID PatchEnableHeadless(PVOID pGame)
     UINT32* flags = (UINT32*)((CHAR*)pGame + 468);
     *flags &= 0xFFFFFFFD; // clear second bit
 
-    // Create a console
-    // Note: We do this because attaching to the parent process console would already be detached due to /SUBSYSTEM:WINDOWS.
-    // Attaching two processes to a console at once would be messy and.
-    AllocConsole();
-    
-    // Redirect our standard streams to the new console.
-    FILE* fConsole;
-    freopen_s(&fConsole, "CONIN$", "r", stdin);
-    freopen_s(&fConsole, "CONOUT$", "w", stderr);
-    freopen_s(&fConsole, "CONOUT$", "w", stdout);
-     
-    // Enable ANSI color coding on the console.
-    HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
-    HANDLE hStdErr = GetStdHandle(STD_ERROR_HANDLE);
-    DWORD consoleMode;
-
-    GetConsoleMode(hStdOut, &consoleMode);
-    consoleMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING | DISABLE_NEWLINE_AUTO_RETURN;
-    SetConsoleMode(hStdOut, consoleMode);
-
-    GetConsoleMode(hStdErr, &consoleMode);
-    consoleMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING | DISABLE_NEWLINE_AUTO_RETURN;
-    SetConsoleMode(hStdErr, consoleMode);
-
-    // Install our hook to capture logs to the console.
-    PatchDetour(&(PVOID&)EchoVR::WriteLog, WriteLogHook);
-
     // Patch the engine initialization/configuration to skip initialization of the rendering providers.
     BYTE pbPatch[] = {
         0xA8, 0x00 // TEST al, 0 (replaces a test against 1, to skip the renderer initialization).
@@ -412,10 +385,45 @@ UINT64 HttpConnectHook(PVOID unk, CHAR* uri)
 /// <returns>None</returns>
 VOID Initialize()
 {
+#pragma region Console Creation
+    // Create a console
+    // Note: We do this because attaching to the parent process console would already be detached due to /SUBSYSTEM:WINDOWS.
+    // Attaching two processes to a console at once would be messy and.
+    // open console
+    if (!AllocConsole())
+        MessageBoxW(0, L"Failed to initialize console via AllocConsole(void)", L"Console Error", MB_OK);
+
+    // Redirect our standard streams to the new console.
+    FILE* fConsole;
+    freopen_s(&fConsole, "CONIN$", "r", stdin);
+    freopen_s(&fConsole, "CONOUT$", "w", stderr);
+    freopen_s(&fConsole, "CONOUT$", "w", stdout);
+
+    // Enable ANSI color coding on the console.
+    HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    HANDLE hStdErr = GetStdHandle(STD_ERROR_HANDLE);
+    DWORD consoleMode;
+
+    GetConsoleMode(hStdOut, &consoleMode);
+    consoleMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING | DISABLE_NEWLINE_AUTO_RETURN;
+    SetConsoleMode(hStdOut, consoleMode);
+
+    GetConsoleMode(hStdErr, &consoleMode);
+    consoleMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING | DISABLE_NEWLINE_AUTO_RETURN;
+    SetConsoleMode(hStdErr, consoleMode);
+#pragma endregion
+
     // If we already initialized the library, stop.
-    if (initialized)
+    if (initialized) {
+        printf("[patches::Initialize(%i)] Cannot initialize an already initialized patch!\n", __LINE__);
         return;
+    }
     initialized = true;
+
+    printf("[patches::Initialize(%i)] Initializing detours\n", __LINE__);
+
+    // Install our hook to capture logs to the console.
+    PatchDetour(&(PVOID&)EchoVR::WriteLog, WriteLogHook);
 
     // Patch our CLI argument options to add our additional options.
     PatchDetour(&(PVOID&)EchoVR::BuildCmdLineSyntaxDefinitions, BuildCmdLineSyntaxDefinitionsHook);
@@ -428,6 +436,7 @@ VOID Initialize()
 
     // Patch out the deadlock monitor thread's validation routine if we're compiling in debug mode, as this will panic from process suspension.
 #if _DEBUG
+    printf("[patches::Initialize(%i)] Patching deadlock\n", __LINE__);
     PatchDeadlockMonitor();
 #endif
 }

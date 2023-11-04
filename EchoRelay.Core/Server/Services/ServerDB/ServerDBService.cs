@@ -42,7 +42,7 @@ namespace EchoRelay.Core.Server.Services.ServerDB
         /// <param name="packet">The packet sent by the peer.</param>
         protected override async Task HandlePacket(Peer sender, Packet packet)
         {
-            ConsoleLogger.LogMessage(LogType.Warning, "(ServerDBService) User {0} sent packet with {1} message(s)", sender.Id, packet.Count);
+            ConsoleLogger.LogMessage(LogType.Debug, "(ServerDBService) User {0} sent packet with {1} message(s)", sender.Id, packet.Count);
 
             // Loop for each message received in the packet
             foreach (Message message in packet)
@@ -82,7 +82,7 @@ namespace EchoRelay.Core.Server.Services.ServerDB
         /// <param name="request">The request contents.</param>
         private async Task ProcessLobbyRegistrationRequest(Peer sender, ERGameServerRegistrationRequest request)
         {
-            ConsoleLogger.LogMessage(LogType.Warning, "(ServerDBService) User {0} requested ERGameServerRegistrationRequest", sender.Id);
+            ConsoleLogger.LogMessage(LogType.Debug, "(ServerDBService) User {0} requested ERGameServerRegistrationRequest", sender.Id);
 
             // Clear a previous registration if it exists.
             ClearPeerRegistration(sender);
@@ -115,7 +115,7 @@ namespace EchoRelay.Core.Server.Services.ServerDB
         /// <param name="request">The request contents.</param>
         private async Task ProcessSessionStarted(Peer sender, ERGameServerSessionStarted request)
         {
-            ConsoleLogger.LogMessage(LogType.Warning, "(ServerDBService) User {0} requested ERGameServerSessionStarted", sender.Id);
+            ConsoleLogger.LogMessage(LogType.Debug, "(ServerDBService) User {0} requested ERGameServerSessionStarted", sender.Id);
             // This is here if we need it, but we assume the session started when a session start message is sent.
         }
 
@@ -126,7 +126,7 @@ namespace EchoRelay.Core.Server.Services.ServerDB
         /// <param name="request">The request contents.</param>
         private async Task ProcessEndSession(Peer sender, ERGameServerEndSession request)
         {
-            ConsoleLogger.LogMessage(LogType.Warning, "(ServerDBService) User {0} requested ERGameServerEndSession", sender.Id);
+            ConsoleLogger.LogMessage(LogType.Debug, "(ServerDBService) User {0} requested ERGameServerEndSession", sender.Id);
 
             // Obtain the registered game server
             RegisteredGameServer? registeredGameServer = sender.GetSessionData<RegisteredGameServer>();
@@ -144,7 +144,7 @@ namespace EchoRelay.Core.Server.Services.ServerDB
         /// <param name="request">The request contents.</param>
         private async Task ProcessPlayerSessionsLocked(Peer sender, ERGameServerPlayerSessionsLocked request)
         {
-            ConsoleLogger.LogMessage(LogType.Warning, "(ServerDBService) User {0} requested ERGameServerPlayerSessionsLocked", sender.Id);
+            ConsoleLogger.LogMessage(LogType.Debug, "(ServerDBService) User {0} requested ERGameServerPlayerSessionsLocked", sender.Id);
 
             // Obtain the registered game server
             RegisteredGameServer? registeredGameServer = sender.GetSessionData<RegisteredGameServer>();
@@ -162,7 +162,7 @@ namespace EchoRelay.Core.Server.Services.ServerDB
         /// <param name="request">The request contents.</param>
         private async Task ProcessPlayerSessionsUnlocked(Peer sender, ERGameServerPlayerSessionsUnlocked request)
         {
-            ConsoleLogger.LogMessage(LogType.Warning, "(ServerDBService) User {0} requested ERGameServerPlayerSessionsUnlocked", sender.Id);
+            ConsoleLogger.LogMessage(LogType.Debug, "(ServerDBService) User {0} requested ERGameServerPlayerSessionsUnlocked", sender.Id);
 
             // Obtain the registered game server
             RegisteredGameServer? registeredGameServer = sender.GetSessionData<RegisteredGameServer>();
@@ -180,7 +180,7 @@ namespace EchoRelay.Core.Server.Services.ServerDB
         /// <param name="request">The request contents.</param>
         private async Task ProcessAcceptPlayers(Peer sender, ERGameServerAcceptPlayers request)
         {
-            ConsoleLogger.LogMessage(LogType.Warning, "(ServerDBService) User {0} requested ERGameServerAcceptPlayers", sender.Id);
+            ConsoleLogger.LogMessage(LogType.Debug, "(ServerDBService) User {0} requested ERGameServerAcceptPlayers", sender.Id);
 
             // Obtain the registered game server
             RegisteredGameServer? registeredGameServer = sender.GetSessionData<RegisteredGameServer>();
@@ -198,7 +198,7 @@ namespace EchoRelay.Core.Server.Services.ServerDB
         /// <param name="request">The request contents.</param>
         private async Task ProcessRemovePlayer(Peer sender, ERGameServerRemovePlayer request)
         {
-            ConsoleLogger.LogMessage(LogType.Warning, "(ServerDBService) User {0} requested ERGameServerRemovePlayer", sender.Id);
+            ConsoleLogger.LogMessage(LogType.Debug, "(ServerDBService) User {0} requested ERGameServerRemovePlayer", sender.Id);
 
             // Obtain the registered game server
             RegisteredGameServer? registeredGameServer = sender.GetSessionData<RegisteredGameServer>();

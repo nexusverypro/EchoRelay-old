@@ -165,7 +165,7 @@ namespace EchoRelay.Core.Server.Services
                     switch (messageType)
                     {
                         case WebSocketMessageType.Binary:
-                            ConsoleLogger.LogMessage(LogType.Info, "(Service:{0}) Decoding binary for message. Peer Id = {1}", GetType().Name, peer.Id);
+                            ConsoleLogger.LogMessage(LogType.Debug, "(Service:{0}) Decoding binary for message. Peer Id = {1}", GetType().Name, peer.Id);
 
                             // Parse a packet out of this message.
                             Packet packet = Packet.Decode(packetBuffer);
@@ -177,7 +177,7 @@ namespace EchoRelay.Core.Server.Services
                             await HandlePacket(peer, packet);
                             break;
                         case WebSocketMessageType.Close:
-                            ConsoleLogger.LogMessage(LogType.Info, "(Service:{0}) Closing connection gracefully. Peer Id = {1}", GetType().Name, peer.Id);
+                            ConsoleLogger.LogMessage(LogType.Warning, "(Service:{0}) Closing connection gracefully. Peer Id = {1}", GetType().Name, peer.Id);
 
                             // Close the connection gracefully.
                             await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "", CancellationToken.None);

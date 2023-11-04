@@ -284,7 +284,7 @@ namespace EchoRelay.Core.Server
                     }
 
                     // Create a task to handle the new connection asynchronously (we do not await, so we can continue accepting connections).
-                    ConsoleLogger.LogMessage(LogType.Info, "Starting service task: HandleConnection");
+                    ConsoleLogger.LogMessage(LogType.Debug, "Starting service task: HandleConnection");
                     var handleConnectionTask = Task.Run(() => service.HandleConnection(listenerContext, webSocketContext.WebSocket));
                 }
             }
@@ -350,7 +350,6 @@ namespace EchoRelay.Core.Server
         {
             OnServicePacketReceived?.Invoke(service, sender, packet);
         }
-
         private void Service_OnPacketSent(Service service, Peer sender, Packet packet)
         {
             OnServicePacketSent?.Invoke(service, sender, packet);

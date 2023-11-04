@@ -11,8 +11,12 @@ namespace EchoRelay.CLI
 {
     internal class CLIGui : CoreGuiBase
     {
+        public static CLIGui Instance { get; private set; }
+
         public override void OnCreate()
         {
+            Instance = this;
+
             ConsoleLogger.OnMessageReceived += OnLogMessageReceived;
             m_ConsoleLogBox = new ConsoleInputBox(0, 0, (short)Console.WindowWidth, (short)(Console.WindowHeight - 1), ConsoleInputBox.Colors.LightWhite, ConsoleInputBox.Colors.Black);
             m_ConsoleInputBox = new ConsoleInputBox(0, (short)(Console.WindowHeight - 1), (short)Console.WindowWidth, 1, ConsoleInputBox.Colors.LightYellow, ConsoleInputBox.Colors.Black);
@@ -53,7 +57,12 @@ namespace EchoRelay.CLI
         {
             ConsoleLogger.OnMessageReceived -= OnLogMessageReceived;
             m_ConsoleInputBox = null;
+
+            Instance = null;
         }
+
+        public ConsoleInputBox ConsoleLogBox => m_ConsoleLogBox;
+        public ConsoleInputBox ConsoleInputBox => m_ConsoleInputBox;
 
         private ConsoleInputBox m_ConsoleLogBox;
         private ConsoleInputBox m_ConsoleInputBox;

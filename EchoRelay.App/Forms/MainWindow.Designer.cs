@@ -173,6 +173,7 @@
             toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             toolsToolStripMenuItem.Size = new Size(46, 20);
             toolsToolStripMenuItem.Text = "Tools";
+            toolsToolStripMenuItem.Click += toolsToolStripMenuItem_Click;
             // 
             // startServerToolStripMenuItem
             // 
@@ -434,6 +435,7 @@
             gameServersControl.Name = "gameServersControl";
             gameServersControl.Size = new Size(1319, 505);
             gameServersControl.TabIndex = 0;
+            gameServersControl.Load += gameServersControl_Load;
             // 
             // tabStorage
             // 

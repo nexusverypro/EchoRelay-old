@@ -509,6 +509,13 @@ namespace EchoRelay.Core.Server.Services.ServerDB
             // Fire the event for the session ending.
             OnSessionStateChanged?.Invoke(this);
         }
+
+        public override string ToString()
+        {
+            var peers = GetPlayers().Result;
+            return string.Format("GameServer(SessionId={0], Channel={1}, LobbyType={2}, Peers={3})", SessionId, SessionChannel, SessionLobbyType, string.Format("[{0}]", string.Join(", ", (from x in peers
+                                                                                                                                                                                            select x.Peer.Id))));
+        }
         #endregion
     }
 }
