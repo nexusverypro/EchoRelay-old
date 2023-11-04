@@ -514,7 +514,7 @@ namespace EchoRelay.Core.Server.Services.ServerDB
         {
             var peers = GetPlayers().Result;
             return string.Format("GameServer(SessionId={0}, Channel={1}, LobbyType={2}, Peers={3})", SessionId, SessionChannel, SessionLobbyType, string.Format("[{0}]", string.Join(", ", (from x in peers
-                                                                                                                                                                                            select x.Peer.Id))));
+                                                                                                                                                                                            select x.Peer.UserDisplayName))));
         }
         #endregion
     }
