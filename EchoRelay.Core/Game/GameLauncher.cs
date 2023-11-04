@@ -35,7 +35,11 @@ namespace EchoRelay.Core.Game
             if (noOVR)
                 args.Add("-noovr");
             if (headless)
+            {
                 args.Add("-headless");
+                args.Add("-nosymbollookup");
+                args.Add("-fixedtimestep");
+            }
 
             ConsoleLogger.LogMessage(LogType.Info, "(GameLauncher) Launching Echo Arena as {0}, with {1} argument(s)\n\t\tFile Path: {2}\n\t\tArguments: {3}", role, args.Count, executableFilePath, string.Join(" ", args));
 
