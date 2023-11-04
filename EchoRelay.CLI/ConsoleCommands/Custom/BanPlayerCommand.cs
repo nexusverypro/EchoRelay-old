@@ -51,6 +51,19 @@ namespace EchoRelay.CLI.ConsoleCommands.Custom
             resource.BannedUntil = DateTime.UtcNow + timeFrame;
             Constants.Storage.Accounts.Set(resource);
 
+            foreach (var rgsKvp in Constants.Server.ServerDBService.Registry.RegisteredGameServers)
+            {
+                var peer = (await rgsKvp.Value.GetPlayers())
+                    .FirstOrDefault(x => x.Peer.UserId!.ToString() == args.GetParameter<string>("id", "") ||
+                                         x.Peer.UserDisplayName!.ToString() == args.GetParameter<string>("name", ""));
+
+                if (peer.Peer != null)
+                {
+                    await rgsKvp.Value.KickPlayer(peer.PlayerSession);
+                    ConsoleLogger.LogMessage(LogType.Warning, "Kicked '{0}' from their session", peer.Peer.UserDisplayName);
+                }
+            }
+
             // mathie can take it from here
             // all you have to do is use Constants.Storage.Accounts
             // to save the account resouce
