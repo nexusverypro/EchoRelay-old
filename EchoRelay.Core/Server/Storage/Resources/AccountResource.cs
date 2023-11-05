@@ -70,7 +70,7 @@ namespace EchoRelay.Core.Server.Storage.Types
         {
             Profile = new AccountProfile();
         }
-        public AccountResource(XPlatformId userId, string? displayName = null, bool completedNPE = false, bool completedCommunityGuidelines = false, bool disableAfkTimeout = false) : this()
+        public AccountResource(XPlatformId userId, string? displayName = null, bool completedNPE = false, bool completedCommunityGuidelines = false, bool disableAfkTimeout = true) : this()
         {
             // Verify the user id provided.
             if (!userId.Valid())
