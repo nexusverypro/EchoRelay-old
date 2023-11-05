@@ -7,6 +7,7 @@ using EchoRelay.Core.Utils;
 using System.Data;
 using System.Net;
 using System.Security.Cryptography;
+using static EchoRelay.Core.Server.Messages.ServerDB.ERGameServerPlayersRejected;
 
 namespace EchoRelay.Core.Server.Services.ServerDB
 {
@@ -462,6 +463,12 @@ namespace EchoRelay.Core.Server.Services.ServerDB
         {
             // Inform the game server we rejected player sessions.
             await Peer.Send(new ERGameServerPlayersRejected(ERGameServerPlayersRejected.PlayerSessionError.KickedFromServer, new Guid[] { playerSession }));
+        }
+
+        public async Task KickPlayerCustom(Guid playerSession, PlayerSessionError playerSessionError)
+        {
+            // Inform the game server we rejected player sessions.
+            await Peer.Send(new ERGameServerPlayersRejected(playerSessionError, new Guid[] { playerSession }));
         }
 
         public async Task RemovePlayer(Guid playerSession)
