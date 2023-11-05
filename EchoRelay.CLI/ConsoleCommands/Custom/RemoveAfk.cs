@@ -1,35 +1,43 @@
 ﻿using EchoRelay.Core.ConsoleUtils;
+using EchoRelay.Core.Game;
+using EchoRelay.Core.Server.Storage.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using static EchoRelay.Core.Server.Messages.ServerDB.ERGameServerPlayersRejected;
 
 namespace EchoRelay.CLI.ConsoleCommands.Custom
 {
-    internal class CustomKickPlayerCommand : CommandBase
+    internal class RemoveAFK : CommandBase
     {
-        public override string Name => "customkick";
-        public override string Description => "Kicks a player from a game [args: ('id' any possible) OR ('name' any possible), ('error' any possible)]";
+        public override string Name => "removeafk";
+        public override string Description => "Removes the AFK kick from a specified user [args: ('id' any possible) OR ('name' any possible)]";
 
         public override async Task Execute(CommandArguments args)
         {
-            string error = args.GetParameter<string>("error", "").ToLower();
-            PlayerSessionError errorEnum = PlayerSessionError.Disconnected;
-            if (error == "internal") { errorEnum = PlayerSessionError.Internal; } else if(error == "badrequest") { errorEnum = PlayerSessionError.BadRequest; } else if(error == "timeout") { errorEnum = PlayerSessionError.Timeout; } else if(error == "duplicate") { errorEnum = PlayerSessionError.Duplicate; } else if(error == "disconnect") { errorEnum = PlayerSessionError.Disconnected; }
-            foreach (var rgsKvp in Constants.Server.ServerDBService.Registry.RegisteredGameServers)
-            {
-                var peer = (await rgsKvp.Value.GetPlayers())
-                    .FirstOrDefault(x => x.Peer.UserId!.ToString() == args.GetParameter<string>("id", "") ||
-                                         x.Peer.UserDisplayName!.ToString() == args.GetParameter<string>("name", ""));
+            AccountResource? resource = null;
 
-                if (peer.Peer != null)
-                {
-                    await rgsKvp.Value.KickPlayerCustom(peer.PlayerSession, errorEnum);
-                    ConsoleLogger.LogMessage(LogType.Warning, "Kicked '{0}' from their session", peer.Peer.UserDisplayName);
-                }
+            if (args.HasParameter("id"))
+                resource = Constants.Storage.Accounts.Get(XPlatformId.Parse(args.GetParameter<string>("id"))!);
+            if (args.HasParameter("name"))
+            {
+                var displayName = args.GetParameter<string>("name");
+                resource = Constants.Storage.Accounts.Values()
+                        .FirstOrDefault(x => x.Profile.Server.DisplayName == displayName);
             }
+
+            if (resource == null)
+            {
+                ConsoleLogger.LogMessage(LogType.Error, "Cannot find account.");
+                return;
+            }
+
+            resource.Profile.Server.Developer!.DisableAfkTimeout = true;
+
+            ConsoleLogger.LogMessage(LogType.Info, "Removed AFK Timeout for '{0}'", resource.Profile.Server.DisplayName);
         }
     }
 }
