@@ -465,6 +465,8 @@ namespace EchoRelay.Core.Server.Services.ServerDB
             await Peer.Send(new ERGameServerPlayersRejected(ERGameServerPlayersRejected.PlayerSessionError.KickedFromServer, new Guid[] { playerSession }));
         }
 
+
+        // bro this shit won't get pushed
         public async Task KickPlayerCustom(Guid playerSession, PlayerSessionError playerSessionError)
         {
             // Inform the game server we rejected player sessions.
