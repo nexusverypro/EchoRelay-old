@@ -16,7 +16,7 @@ namespace EchoRelay.CLI.ConsoleCommands.Custom
 
         public override async Task Execute(CommandArguments args)
         {
-            ConsoleLogger.LogMessage(LogType.Info, "Test Command successfully executed!");
+            ConsoleLogger.LogMessage(LogType.Info, "Trying to set a new executable..");
             await Program.SetNewExecutable();
         }
     }
