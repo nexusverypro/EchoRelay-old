@@ -1,4 +1,5 @@
-﻿using EchoRelay.Core.Server.Messages.ServerDB;
+﻿using EchoRelay.Core.ConsoleUtils;
+using EchoRelay.Core.Server.Messages.ServerDB;
 using EchoRelay.Core.Utils;
 using System.Collections.Concurrent;
 using static EchoRelay.Core.Server.Messages.ServerDB.ERGameServerStartSession;
@@ -46,6 +47,7 @@ namespace EchoRelay.Core.Server.Services.ServerDB
 
             // Fire the relevant event for the game server being registered.
             OnGameServerRegistered?.Invoke(registeredGameServer);
+            ConsoleLogger.LogMessage(LogType.Info, "Echo GameServer with IP '{0}:{1}' has just been registered.", peer.Address, peer.Port);
             return registeredGameServer;
         }
 

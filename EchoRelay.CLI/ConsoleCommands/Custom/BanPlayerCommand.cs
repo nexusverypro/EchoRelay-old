@@ -52,7 +52,7 @@ namespace EchoRelay.CLI.ConsoleCommands.Custom
             resource.BannedUntil = DateTime.UtcNow + timeFrame;
             Constants.Storage.Accounts.Set(resource);
 
-            ConsoleLogger.LogMessage(LogType.Warning, "Banned '{0}' from their session", resource.Profile.Server.DisplayName);
+            ConsoleLogger.LogMessage(LogType.Warning, "Banned '{0}' successfully!", resource.Profile.Server.DisplayName);
 
             foreach (var rgsKvp in Constants.Server.ServerDBService.Registry.RegisteredGameServers)
             {
@@ -66,10 +66,6 @@ namespace EchoRelay.CLI.ConsoleCommands.Custom
                     ConsoleLogger.LogMessage(LogType.Warning, "Kicked '{0}' from their session", peer.Peer.UserDisplayName);
                 }
             }
-
-            // mathie can take it from here
-            // all you have to do is use Constants.Storage.Accounts
-            // to save the account resouce
         }
     }
 }
