@@ -33,6 +33,12 @@ namespace EchoRelay.CLI.ConsoleCommands.Custom
         {
             AccountResource? resource = null;
 
+            if(args.GetParameter<string>("time") == null)
+            {
+                ConsoleLogger.LogMessage(LogType.Error, "I need a time parameter.");
+                return;
+            }
+
             var timeFrame = GetFromTimeFrameString(args.GetParameter<string>("time"));
             if (args.HasParameter("id"))
                 resource = Constants.Storage.Accounts.Get(XPlatformId.Parse(args.GetParameter<string>("id"))!);
