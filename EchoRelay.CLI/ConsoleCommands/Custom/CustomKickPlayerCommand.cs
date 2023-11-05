@@ -16,8 +16,14 @@ namespace EchoRelay.CLI.ConsoleCommands.Custom
         public override async Task Execute(CommandArguments args)
         {
             string error = args.GetParameter<string>("error", "").ToLower();
-            PlayerSessionError errorEnum = PlayerSessionError.Disconnected;
-            if (error == "internal") { errorEnum = PlayerSessionError.Internal; } else if(error == "badrequest") { errorEnum = PlayerSessionError.BadRequest; } else if(error == "timeout") { errorEnum = PlayerSessionError.Timeout; } else if(error == "duplicate") { errorEnum = PlayerSessionError.Duplicate; } else if(error == "disconnect") { errorEnum = PlayerSessionError.Disconnected; }
+            bool parseSuccess = Enum.TryParse<PlayerSessionError>(error, true, out PlayerSessionError sessionError);
+
+            if (parseSuccess)
+            {
+                ConsoleLogger.LogMessage(LogType.Error, "The error {0} does not exist.", error);
+                return;
+            }
+
             foreach (var rgsKvp in Constants.Server.ServerDBService.Registry.RegisteredGameServers)
             {
                 var peer = (await rgsKvp.Value.GetPlayers())
@@ -26,8 +32,8 @@ namespace EchoRelay.CLI.ConsoleCommands.Custom
 
                 if (peer.Peer != null)
                 {
-                    await rgsKvp.Value.KickPlayerCustom(peer.PlayerSession, errorEnum);
-                    ConsoleLogger.LogMessage(LogType.Warning, "Kicked '{0}' from their session", peer.Peer.UserDisplayName);
+                    await rgsKvp.Value.KickPlayerCustom(peer.PlayerSession, sessionError);
+                    ConsoleLogger.LogMessage(LogType.Warning, "Kicked '{0}' from their session", peer.Peer.UserDisplayName!);
                 }
             }
         }

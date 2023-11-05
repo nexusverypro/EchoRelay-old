@@ -12,11 +12,15 @@ namespace EchoRelay.CLI.ConsoleCommands.Custom
     internal class LaunchGameServerCommand : CommandBase
     {
         public override string Name => "launch_rgs";
-        public override string Description => "Launches a registered game server. [args: ('headless' not required possible 'true', 'false')]";
+        public override string Description => "Launches a registered game server. [args: ('count' not required possible '1 - 10'), ('headless' not required possible 'true', 'false')]";
 
         public override async Task Execute(CommandArguments args)
         {
-            GameLauncher.Launch(Constants.AppSettings.GameExecutableFilePath, GameLauncher.LaunchRole.Server, false, false, false, true, args.GetParameter("headless", false), null);
+            int count = Math.Clamp(args.GetParameter<int>("count", 1), 1, 10);
+
+            for (int i = 0; i < count; i++)
+                GameLauncher.Launch(Constants.AppSettings.GameExecutableFilePath, GameLauncher.LaunchRole.Server, false, false, false, true, args.GetParameter("headless", false), null);
+            ConsoleLogger.LogMessage(LogType.Warning, "Started {0} game servers.", count);
         }
     }
 }
